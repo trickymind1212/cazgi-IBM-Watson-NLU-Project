@@ -38,7 +38,6 @@ const analyzeParams = {
   'features': {
     'keywords': {
       'emotion': true,
-      'limit':1
     }
   }
 };
@@ -62,7 +61,6 @@ const analyzeParams = {
   'features': {
     'keywords': {
       'sentiment': true,
-      'limit':1
     }
   }
 };
