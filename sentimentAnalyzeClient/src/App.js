@@ -47,15 +47,16 @@ class App extends React.Component {
     ret.then((response)=>{
 
       //Include code here to check the sentiment and fomrat the data accordingly
-
-      this.setState({sentimentOutput:response.data});
-      let output = response.data;
-      if(response.data === "positive") {
-        output = <div style={{color:"green",fontSize:20}}>{response.data}</div>
-      } else if (response.data === "negative"){
-        output = <div style={{color:"red",fontSize:20}}>{response.data}</div>
+      console.log("Response sentiment - ",response.data[0].label)
+      this.setState({sentimentOutput:JSON.stringify(response.data[0])});
+      console.log("Response sentiment 2- ",response.data[0].label)
+      let output = response.data[0].label;
+      if(response.data[0].label === "positive") {
+        output = <div style={{color:"green",fontSize:20}}>{response.data[0].label}</div>
+      } else if (response.data[0].label === "negative"){
+        output = <div style={{color:"red",fontSize:20}}>{response.data[0].label}</div>
       } else {
-        output = <div style={{color:"orange",fontSize:20}}>{response.data}</div>
+        output = <div style={{color:"orange",fontSize:20}}>{response.data[0].label}</div>
       }
       this.setState({sentimentOutput:output});
     });
@@ -73,13 +74,16 @@ class App extends React.Component {
     ret = axios.get(url);
 
     ret.then((response)=>{
-      this.setState({sentimentOutput:<EmotionTable emotions={response.data}/>});
+    console.log("Response 1 - ",response.data.emotion)
+      this.setState({sentimentOutput:<EmotionTable emotions={response.data.emotion.targets}/>});
   });
   }
   
 
   render() {
-    return (  
+    return ( 
+      <>
+        <title>Sentiment Analyzer</title> 
       <div className="App">
       <button className="btn btn-info" onClick={this.renderTextArea}>Text</button>
         <button className="btn btn-dark"  onClick={this.renderTextBox}>URL</button>
@@ -91,6 +95,7 @@ class App extends React.Component {
         <br/>
             {this.state.sentimentOutput}
       </div>
+      </>
     );
     }
 }
