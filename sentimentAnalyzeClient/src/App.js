@@ -1,6 +1,8 @@
 import './bootstrap.min.css';
 import './App.css';
 import EmotionTable from './EmotionTable.js';
+import SentimentTable from './SentimentTable.js';
+import EmotionUrlTable from './EmotionUrlTable.js';
 import React from 'react';
 import axios from 'axios';
 
@@ -40,25 +42,35 @@ class App extends React.Component {
 
     if(this.state.mode === "url") {
       url = url+"/url/sentiment?url="+document.getElementById("textinput").value;
+
     } else {
       url = url+"/text/sentiment?text="+document.getElementById("textinput").value;
     }
     ret = axios.get(url);
     ret.then((response)=>{
-
-      //Include code here to check the sentiment and fomrat the data accordingly
-      console.log("Response sentiment - ",response.data[0].label)
-      this.setState({sentimentOutput:JSON.stringify(response.data[0])});
-      console.log("Response sentiment 2- ",response.data[0].label)
-      let output = response.data[0].label;
-      if(response.data[0].label === "positive") {
-        output = <div style={{color:"green",fontSize:20}}>{response.data[0].label}</div>
-      } else if (response.data[0].label === "negative"){
-        output = <div style={{color:"red",fontSize:20}}>{response.data[0].label}</div>
-      } else {
-        output = <div style={{color:"orange",fontSize:20}}>{response.data[0].label}</div>
-      }
-      this.setState({sentimentOutput:output});
+        if(this.state.mode === 'url')
+        {
+            console.log("This is data  - ",response.data)
+            console.log("This is data 1 - ",response.data.keywords)
+             this.setState({sentimentOutput:<SentimentTable emotions={response.data}/>});
+        }
+        else
+        {
+                //  Include code here to check the sentiment and fomrat the data accordingly
+                //   console.log("Response sentiment - ",response.data)
+                this.setState({sentimentOutput:JSON.stringify(response.data[0])});
+                //   console.log("Response sentiment 2- ",response.data[0].label)
+                let output = response.data[0].label;
+                if(response.data[0].label === "positive") {
+                    output = <div style={{color:"green",fontSize:20}}>{response.data[0].label}</div>
+                } else if (response.data[0].label === "negative"){
+                    output = <div style={{color:"red",fontSize:20}}>{response.data[0].label}</div>
+                } else {
+                    output = <div style={{color:"orange",fontSize:20}}>{response.data[0].label}</div>
+                }
+                this.setState({sentimentOutput:output});
+        }
+     
     });
   }
 
@@ -74,6 +86,15 @@ class App extends React.Component {
     ret = axios.get(url);
 
     ret.then((response)=>{
+         if(this.state.mode === 'url')
+        {
+             console.log("Response 1234 - ",response.data)
+              this.setState({sentimentOutput:<EmotionUrlTable emotions={response.data}/>});
+        }
+        else
+        {
+
+        }
     console.log("Response 1 - ",response.data.emotion)
       this.setState({sentimentOutput:<EmotionTable emotions={response.data.emotion.targets}/>});
   });
